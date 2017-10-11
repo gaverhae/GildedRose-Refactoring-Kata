@@ -53,15 +53,8 @@ class Shop {
   }
   updateQuality() {
     for (var i = 0; i < this.items.length; i++) {
-      if (this.items[i].name === "Sulfuras, Hand of Ragnaros"
-         || this.items[i].name === "Aged Brie"
-         || this.items[i].name === 'Backstage passes to a TAFKAL80ETC concert'
-         || true) {
-        this.items[i] = this.items[i].tick();
-        continue;
-      };
+      this.items[i] = this.items[i].tick();
     }
-
     return this.items;
   }
 }
