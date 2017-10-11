@@ -41,12 +41,18 @@ const BackstagePasses = (bandName, sellIn, quality) => {
                                   : 0)};
 };
 
+const Conjured = (item) => {
+  const one_update = item.nextQuality;
+  return {...item,
+          nextQuality: (i) => one_update({...i, quality: one_update(i)})};
+};
+
 class Shop {
   constructor(items=[]){
     this.items = items;
   }
   updateQuality() {
-    this.items = this.items.map(item => item.tick());
+    this.items = this.items.map(item => tick(item));
     return this.items;
   }
 }
