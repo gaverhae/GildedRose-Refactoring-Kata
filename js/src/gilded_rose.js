@@ -7,19 +7,26 @@ class Item {
 }
 
 const genericItem = (name, sellIn, quality) => {
-    return new Item(name, sellIn, quality);
+  return new Item(name, sellIn, quality);
+};
+
+const capQuality = (f) => () => {
+  const item = f();
+  return {...item, quality: Math.min(50, item.quality)};
 };
 
 const AgedBrie = (sellIn, quality) => {
-    return new Item("Aged Brie", sellIn, quality);
+  const tick = () => AgedBrie(sellIn - 1, sellIn > 0 ? quality + 1 : quality + 2);
+  return {name: "Aged Brie",
+          tick: capQuality(tick),
+          sellIn, quality};
 };
 
 const Sulfuras = (sellIn) => {
   const tick = () => Sulfuras(sellIn);
   return {name: "Sulfuras, Hand of Ragnaros",
-          sellIn: sellIn,
           quality: 80,
-          tick: tick};
+          sellIn, tick};
 };
 
 const BackstagePasses = (bandName, sellIn, quality) => {
@@ -32,7 +39,8 @@ class Shop {
   }
   updateQuality() {
     for (var i = 0; i < this.items.length; i++) {
-      if (this.items[i].name === "Sulfuras, Hand of Ragnaros") {
+      if (this.items[i].name === "Sulfuras, Hand of Ragnaros"
+         || this.items[i].name === "Aged Brie") {
         this.items[i] = this.items[i].tick();
         continue;
       };
