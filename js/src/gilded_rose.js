@@ -6,45 +6,39 @@ class Item {
   }
 }
 
-const capQuality = (f) => () => {
-  const item = f();
-  return {...item, quality: Math.max(0, Math.min(50, item.quality))};
-};
+const tick = (item) => ({...item,
+                         quality: item.nextQuality(item),
+                         sellIn: item.nextSellIn(item)});
+
+const cap = (q) => Math.max(0, Math.min(50, q));
 
 const genericItem = (name, sellIn, quality) => {
-  const tick = () => genericItem(name,
-                                 sellIn - 1,
-                                 sellIn > 0 ? quality - 1 : quality - 2);
-  return {name, sellIn, quality,
-          tick: capQuality(tick)};
+  const nextQuality = (i) => cap(i.sellIn > 0 ? i.quality - 1 : i.quality - 2);
+  const nextSellIn = (i) => i.sellIn - 1;
+  return {name, sellIn, quality, nextSellIn, nextQuality};
 };
 
 const AgedBrie = (sellIn, quality) => {
-  const tick = () => AgedBrie(sellIn - 1, sellIn > 0 ? quality + 1 : quality + 2);
-  return {name: "Aged Brie",
-          tick: capQuality(tick),
-          sellIn, quality};
+  const item = genericItem("Aged Brie", sellIn, quality);
+  return {...item,
+          nextQuality: (i) => cap(i.sellIn > 0 ? i.quality + 1 : i.quality + 2)};
 };
 
 const Sulfuras = (sellIn) => {
-  const tick = () => Sulfuras(sellIn);
-  return {name: "Sulfuras, Hand of Ragnaros",
-          quality: 80,
-          sellIn, tick};
+  const item = genericItem("Sulfuras, Hand of Ragnaros", sellIn, 80);
+  return {...item,
+          nextSellIn: (i) => i.sellIn,
+          nextQuality: (_) => 80};
 };
 
 const BackstagePasses = (bandName, sellIn, quality) => {
-  const tick = () =>
-    BackstagePasses(
-      bandName,
-      sellIn - 1,
-      sellIn > 10 ? quality + 1
-      : sellIn > 5 ? quality + 2
-      : sellIn > 0 ? quality + 3
-      : 0);
-  return {sellIn, quality,
-          tick: capQuality(tick),
-          name: "Backstage passes to a " + bandName + " concert"};
+  const item = genericItem("Backstage passes to a " + bandName + " concert",
+                           sellIn, quality);
+  return {...item,
+          nextQuality: (i) => cap(i.sellIn > 10 ? i.quality + 1
+                                  : i.sellIn > 5 ? i.quality + 2
+                                  : i.sellIn > 0 ? i.quality + 3
+                                  : 0)};
 };
 
 class Shop {
