@@ -15,7 +15,11 @@ const AgedBrie = (sellIn, quality) => {
 };
 
 const Sulfuras = (sellIn) => {
-    return new Item("Sulfuras, Hand of Ragnaros", sellIn, 80);
+  const tick = () => Sulfuras(sellIn);
+  return {name: "Sulfuras, Hand of Ragnaros",
+          sellIn: sellIn,
+          quality: 80,
+          tick: tick};
 };
 
 const BackstagePasses = (bandName, sellIn, quality) => {
@@ -28,6 +32,10 @@ class Shop {
   }
   updateQuality() {
     for (var i = 0; i < this.items.length; i++) {
+      if (this.items[i].name === "Sulfuras, Hand of Ragnaros") {
+        this.items[i] = this.items[i].tick();
+        continue;
+      };
       if (this.items[i].name != 'Aged Brie' && this.items[i].name != 'Backstage passes to a TAFKAL80ETC concert') {
         if (this.items[i].quality > 0) {
           if (this.items[i].name != 'Sulfuras, Hand of Ragnaros') {
