@@ -6,13 +6,17 @@ class Item {
   }
 }
 
-const genericItem = (name, sellIn, quality) => {
-  return new Item(name, sellIn, quality);
-};
-
 const capQuality = (f) => () => {
   const item = f();
-  return {...item, quality: Math.min(50, item.quality)};
+  return {...item, quality: Math.max(0, Math.min(50, item.quality))};
+};
+
+const genericItem = (name, sellIn, quality) => {
+  const tick = () => genericItem(name,
+                                 sellIn - 1,
+                                 sellIn > 0 ? quality - 1 : quality - 2);
+  return {name, sellIn, quality,
+          tick: capQuality(tick)};
 };
 
 const AgedBrie = (sellIn, quality) => {
@@ -51,7 +55,8 @@ class Shop {
     for (var i = 0; i < this.items.length; i++) {
       if (this.items[i].name === "Sulfuras, Hand of Ragnaros"
          || this.items[i].name === "Aged Brie"
-         || this.items[i].name === 'Backstage passes to a TAFKAL80ETC concert') {
+         || this.items[i].name === 'Backstage passes to a TAFKAL80ETC concert'
+         || true) {
         this.items[i] = this.items[i].tick();
         continue;
       };
