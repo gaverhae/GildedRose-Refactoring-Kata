@@ -6,8 +6,20 @@ class Item {
   }
 }
 
-const createItem = (name, sellIn, quality) => {
+const genericItem = (name, sellIn, quality) => {
     return new Item(name, sellIn, quality);
+};
+
+const AgedBrie = (sellIn, quality) => {
+    return new Item("Aged Brie", sellIn, quality);
+};
+
+const Sulfuras = (sellIn) => {
+    return new Item("Sulfuras, Hand of Ragnaros", sellIn, 80);
+};
+
+const BackstagePasses = (bandName, sellIn, quality) => {
+    return new Item("Backstage passes to a " + bandName + " concert", sellIn, quality);
 };
 
 class Shop {
