@@ -1,11 +1,17 @@
 describe("Gilded Rose", function() {
   describe("when time passes", function() {
-    it("decreases sellIn by one", function() {
+    it("decreases sellIn by one, except for Sulfuras", function() {
       const gildedRose = new Shop([ genericItem("foo", 10, 0),
-                                    genericItem("bar", 0, 0) ]);
+                                    genericItem("bar", 0, 0),
+                                    Sulfuras(10),
+                                    AgedBrie(20, 10),
+                                    BackstagePasses("TAFKAL80ETC", 30, 10)]);
       const items = gildedRose.updateQuality();
       expect(items[0].sellIn).toEqual(9);
       expect(items[1].sellIn).toEqual(-1);
+      expect(items[2].sellIn).toEqual(10);
+      expect(items[3].sellIn).toEqual(19);
+      expect(items[4].sellIn).toEqual(29);
     });
   });
   describe("quality of normal items", function() {
