@@ -6,6 +6,10 @@ class Item {
   }
 }
 
+const createItem = (name, sellIn, quality) => {
+    return new Item(name, sellIn, quality);
+};
+
 class Shop {
   constructor(items=[]){
     this.items = items;
